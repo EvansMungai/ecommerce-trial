@@ -1,0 +1,88 @@
+name: EcommerceSolution
+
+services:
+  CatalogApi:
+    build:
+      context: .
+      dockerfile: Catalog.API/Dockerfile
+    container_name: CatalogAPI
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    depends_on:
+      CatalogDb:
+        condition: service_started
+      rabbitmq :
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__Catalog=Host=CatalogDb;Port=5432;Database=catalog;Username=postgres;Password=postgres
+      - QueueSettings__Host=rabbitmq
+      - QueueSettings__Username=myuser
+      - QueueSettings__Password=mypassword
+    restart: on-failure
+
+  CatalogDb:
+    image: postgres:15
+    container_name: CatalogDb
+    environment:
+      POSTGRES_DB: catalog
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - catalog_postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  OrderApi:
+    build:
+      context: .
+      dockerfile: Order.API/Dockerfile
+    container_name: OrderAPI
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      OrderDb:
+        condition: service_started
+      rabbitmq :
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__Order=Host=OrderDb;Port=5432;Database=order;Username=postgres;Password=postgres
+      - QueueSettings__Host=rabbitmq
+      - QueueSettings__Username=myuser
+      - QueueSettings__Password=mypassword
+    restart: on-failure
+
+  OrderDb:
+    image: postgres:15
+    container_name: OrderDb
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - order_postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: myuser
+      RABBITMQ_DEFAULT_PASS: mypassword
+    ports:
+      - "5672:5672"
+      - "15672:15672" # Management UI on localhost:15672
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 10s
+      timeout: 10s 
+      retries: 3
+    restart: always
+
+volumes:
+  catalog_postgres_data:
+  order_postgres_data:

@@ -1,0 +1,8 @@
+﻿namespace Order.Infrastructure.Messaging;
+
+internal class QueueSettings
+{
+    public string Host { get; set; } = "localhost";
+    public string Username { get; set; } = "guest";
+    public string Password { get; set; } = "guest";
+}
