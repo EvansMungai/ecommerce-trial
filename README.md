@@ -56,16 +56,16 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
 
 1. **API Layer**
    - **Technology:** ASP.NET Core Web API  
-   - **Rationale:** Enables clean separation of concerns, built-in Swagger support, and extensibility for future endpoints.
+   - **Rationale:** Enables clean separation of concerns, built-in Swagger support and extensibility for future endpoints.
 2. **Domain Layer**
    - **Technology:** DDD-style entities
-   - **Rationale:** Enforces business rules, immutability, and encapsulation at the core of the system.
+   - **Rationale:** Enforces business rules, immutability and encapsulation at the core of the system.
 3. **Messaging Layer**
    - **Technology:** MassTransit with RabbitMQ  
    - **Rationale:** Facilitates decoupled communication via durable events and supports scalable message routing.
 4. **Persistence Layer**
    - **Technology:** EF Core with PostgreSQL  
-   - **Rationale:** Provides relational integrity, supports value object mapping, and integrates seamlessly with .NET.
+   - **Rationale:** Provides relational integrity, supports value object mapping and integrates seamlessly with .NET.
 5. **Orchestration Layer**
    - **Technology:** Docker Compose  
    - **Rationale:** Enables reproducible, multi-container deployment with clear service dependencies and isolation.
