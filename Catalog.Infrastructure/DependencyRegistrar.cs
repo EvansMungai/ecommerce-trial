@@ -46,6 +46,7 @@ public static class DependencyRegistrar
                     h.Password(queueSettings.Password);
                 });
                 cfg.ConfigureEndpoints(context);
+                cfg.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
             });
         });
     }

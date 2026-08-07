@@ -18,7 +18,8 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
 
     public async Task Consume(ConsumeContext<OrderCreatedEvent> context)
     {
-        var orderEvent = context.Message;
+        OrderCreatedEvent orderEvent = context.Message;
+        //Guid trackingId = orderEvent.OrderId;
         await _productService.DeductStock(orderEvent, context.CancellationToken);
         await _unitOfWork.SaveChangesAsync();
     }
