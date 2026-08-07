@@ -32,6 +32,10 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
 2. **Choreographed Saga(Eventual Consistency)**
    - Reliance on message queues to achieve eventual consistency across system boundaries instead of relying on heavy, blocking HTTP call.
    - Immutable events via records guarantees that once an event is pushed into the broker, its data cannot be modified.
+3. **consumer Idempotency & Resiliency**
+   - Atomic Constraint validation: Incoming event are matched against an internal tracking log utilizing unique message footprints right at the service boundary
+   - All-or-Nothing Execution: By wrapping the idempotency check and the business domain updates inside a single, unified persitence unit, duplicate messages trigger an immediate database constraint exception.
+   - Safe Duplicate Eviction: When a duplicate message is identified by the guard, the transaction safely rolls back, the exception is intercepted and the message is acknowledged (ACKed). This prevents duplicate state mutations while allowing true transient errors to bubble up for standard broker retries.
   
 ### Data Layer Strategy
 
