@@ -34,6 +34,22 @@ services:
       - catalog_postgres_data:/var/lib/postgresql/data
     restart: always
 
+  CatalogWorker:
+    build:
+      context: .
+      dockerfile: Catalog.Worker/Dockerfile
+    depends_on:
+      rabbitmq: 
+        condition: service_healthy
+      CatalogDb:
+        condition: service_started
+    environment:
+      - ConnectionStrings__Catalog=Host=CatalogDb;Port=5432;Database=catalog;Username=postgres;Password=postgres
+      - QueueSettings__Host=rabbitmq
+      - QueueSettings__Username=myuser
+      - QueueSettings__Password=mypassword
+    restart: on-failure
+
   OrderApi:
     build:
       context: .

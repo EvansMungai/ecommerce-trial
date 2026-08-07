@@ -2,7 +2,6 @@
 using Catalog.Application.Usecases.Categories;
 using Catalog.Application.Usecases.Products;
 using Catalog.Infrastructure.Messaging;
-using Catalog.Infrastructure.Messaging.Consumers;
 using Catalog.Infrastructure.Persistence;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +12,7 @@ namespace Catalog.Infrastructure;
 
 public static class DependencyRegistrar
 {
-    public static void RegisterInfrastructureServices(this IServiceCollection services, IConfiguration config)
+    public static void RegisterInfrastructureServices(this IServiceCollection services, IConfiguration config, Action<IBusRegistrationConfigurator>? configureConsumers = null)
     {
         services.AddDbContext<CatalogDbContext>(options => options.UseNpgsql(config.GetConnectionString("Catalog")));
 
@@ -26,7 +25,7 @@ public static class DependencyRegistrar
         services.Configure<QueueSettings>(config.GetSection("QueueSettings"));
         services.AddMassTransit(x =>
         {
-            x.AddConsumer<OrderCreatedConsumer>();
+            configureConsumers?.Invoke(x);
             x.UsingRabbitMq((context, cfg) =>
             {
                 if (config is null)
@@ -46,7 +45,6 @@ public static class DependencyRegistrar
                     h.Password(queueSettings.Password);
                 });
                 cfg.ConfigureEndpoints(context);
-                //cfg.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
             });
         });
         services.AddStackExchangeRedisCache(options =>

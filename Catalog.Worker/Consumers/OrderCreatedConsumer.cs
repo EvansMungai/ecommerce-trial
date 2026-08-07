@@ -4,7 +4,7 @@ using Ecommerce.Shared.Events;
 using MassTransit;
 using Microsoft.Extensions.Caching.Distributed;
 
-namespace Catalog.Infrastructure.Messaging.Consumers;
+namespace Catalog.Worker.Consumers;
 
 public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
 {
