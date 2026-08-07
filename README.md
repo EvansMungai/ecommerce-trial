@@ -33,10 +33,10 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
    - Reliance on message queues to achieve eventual consistency across system boundaries instead of relying on heavy, blocking HTTP call.
    - Immutable events via records guarantees that once an event is pushed into the broker, its data cannot be modified.
 3. **consumer Idempotency & Resiliency**
-   - Atomic Constraint validation: Incoming event are matched against an internal tracking log utilizing unique message footprints right at the service boundary
-   - All-or-Nothing Execution: By wrapping the idempotency check and the business domain updates inside a single, unified persitence unit, duplicate messages trigger an immediate database constraint exception.
-   - Safe Duplicate Eviction: When a duplicate message is identified by the guard, the transaction safely rolls back, the exception is intercepted and the message is acknowledged (ACKed). This prevents duplicate state mutations while allowing true transient errors to bubble up for standard broker retries.
-  
+   - Decoupled Lifecycle via Docker & Redis: Idempotency state are maintained completely external to the application container inside a Redis service container. This ensures that tracking data survives application restarts, scaling events or runtime crashes.
+   - Storage Purity: The core microservices database schema remains perfectly pristine, storing exclusively domain business data. Infrastructure logs and message GUIDs are handled out-of-band with automatic 24-hour Time-To-Live (TTL) expiration managed by Redis.
+   - Fail-Safe Exception Isolation: The guard operates explicitly inside the consumer code block. If an execution or database transaction fails mid-flight, the tracking token is programmatically evicted from the cache. This ensures that natural broker retry loops can re-evaluate the event safely without getting falsely blocked as a duplicate.
+   
 ### Data Layer Strategy
 
 1. **Context & Configuration Isolation**

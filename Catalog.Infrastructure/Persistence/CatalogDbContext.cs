@@ -10,6 +10,7 @@ public class CatalogDbContext : DbContext, IUnitOfWork
     #region Properties
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
+    //public DbSet<ProcessMessageLog> ProcessedMessages { get; set; }
     #endregion
 
     #region Constructor

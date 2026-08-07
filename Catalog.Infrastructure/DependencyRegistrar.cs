@@ -46,8 +46,13 @@ public static class DependencyRegistrar
                     h.Password(queueSettings.Password);
                 });
                 cfg.ConfigureEndpoints(context);
-                cfg.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
+                //cfg.UseConsumeFilter(typeof(IdempotencyFilter<>), context);
             });
+        });
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = "cache:6379";
+            options.InstanceName = "CatalogSvc:";
         });
     }
 }

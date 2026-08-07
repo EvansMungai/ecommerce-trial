@@ -83,6 +83,16 @@ services:
       retries: 3
     restart: always
 
+  cache: 
+    image: redis:8-alpine
+    container_name: ecommerce-cache
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - redis_data:/data 
+
 volumes:
   catalog_postgres_data:
   order_postgres_data:
+  redis_data:
