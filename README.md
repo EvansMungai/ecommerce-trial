@@ -6,7 +6,7 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
 
 ## ✨ Features
 
-1. **Order Management**: Order Creation, Persistence, Computed Values.
+1. **Order Management**: Order Creation, Order Status update, Persistence, Computed Values.
 2. **Catalog Management**: Product Creation, Categorization and Inventory Management.
 3. **Clean Architecture**: Separation of concerns, Event-driven architecture, Domain-driven design, Generic Repository.
 4. **Infrastructure & Orchestration**: Docker. Docker compose for local orchestration.
@@ -32,7 +32,7 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
 2. **Choreographed Saga(Eventual Consistency)**
    - Reliance on message queues to achieve eventual consistency across system boundaries instead of relying on heavy, blocking HTTP call.
    - Immutable events via records guarantees that once an event is pushed into the broker, its data cannot be modified.
-3. **consumer Idempotency & Resiliency**
+3. **Consumer Idempotency & Resiliency**
    - Decoupled Lifecycle via Docker & Redis: Idempotency state are maintained completely external to the application container inside a Redis service container. This ensures that tracking data survives application restarts, scaling events or runtime crashes.
    - Storage Purity: The core microservices database schema remains perfectly pristine, storing exclusively domain business data. Infrastructure logs and message GUIDs are handled out-of-band with automatic 24-hour Time-To-Live (TTL) expiration managed by Redis.
    - Fail-Safe Exception Isolation: The guard operates explicitly inside the consumer code block. If an execution or database transaction fails mid-flight, the tracking token is programmatically evicted from the cache. This ensures that natural broker retry loops can re-evaluate the event safely without getting falsely blocked as a duplicate.
