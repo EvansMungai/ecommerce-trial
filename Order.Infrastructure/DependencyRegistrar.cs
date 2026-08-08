@@ -11,7 +11,7 @@ namespace Order.Infrastructure;
 
 public static class DependencyRegistrar
 {
-    public static void RegisterInfrastructureServices(this IServiceCollection services, IConfiguration config)
+    public static void RegisterInfrastructureServices(this IServiceCollection services, IConfiguration config, Action<IBusRegistrationConfigurator>? configureConsumers = null)
     {
         services.AddDbContext<OrderDbContext>(options => options.UseNpgsql(config.GetConnectionString("Order")));
 
@@ -24,6 +24,7 @@ public static class DependencyRegistrar
         services.Configure<QueueSettings>(config.GetSection("QueueSettings"));
         services.AddMassTransit(x =>
         {
+            configureConsumers?.Invoke(x);
             x.UsingRabbitMq((context, cfg) =>
             {
                 if (config is null)
@@ -42,6 +43,12 @@ public static class DependencyRegistrar
                     h.Username(queueSettings.Username);
                     h.Password(queueSettings.Password);
                 });
+                cfg.ConfigureEndpoints(context);
+            });
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "cache:6379";
+                options.InstanceName = "OrderSvc:";
             });
         });
     }

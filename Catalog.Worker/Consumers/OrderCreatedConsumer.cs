@@ -28,6 +28,10 @@ public class OrderCreatedConsumer : IConsumer<OrderCreatedEvent>
         try
         {
             await _productService.DeductStock(orderEvent, context.CancellationToken);
+
+            StockDeductedEvent stockDeductedEvent = new StockDeductedEvent(orderEvent.OrderGuid, orderEvent.Id, DateTime.UtcNow);
+            await context.Publish(stockDeductedEvent, context.CancellationToken);
+
             await _unitOfWork.SaveChangesAsync();
         }
         catch (Exception ex)

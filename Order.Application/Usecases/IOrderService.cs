@@ -1,4 +1,5 @@
-﻿using Order.Application.Dtos;
+﻿using Ecommerce.Shared.Events;
+using Order.Application.Dtos;
 
 namespace Order.Application.Usecases;
 
@@ -9,5 +10,6 @@ public interface IOrderService
     Task<OrderResponse> GetOrderByPhoneNumberAsync(string phonenumber, CancellationToken cancellationToken = default);
     Task<Guid> CreateOrder(CreateOrderRequest request, CancellationToken cancellationToken = default);
     Task UpdateOrderDetails(CreateOrderRequest order, int id, CancellationToken cancellationToken = default);
+    Task UpdateOrderStatus(StockDeductedEvent request, int id, CancellationToken cancellationToken = default);
     Task RemoveOrderAsync(int id, CancellationToken cancellationToken = default);
 }

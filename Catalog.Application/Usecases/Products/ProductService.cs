@@ -75,7 +75,7 @@ public class ProductService : IProductService
 
             product.DeductStock(item.Quantity);
         }
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        //await _unitOfWork.SaveChangesAsync(cancellationToken);
 }
 
     public async Task UpdateProduct(CreateProductRequest request, int id, CancellationToken cancellationToken = default)

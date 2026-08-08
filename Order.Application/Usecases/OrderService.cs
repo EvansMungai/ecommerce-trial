@@ -2,6 +2,7 @@
 using Order.Application.Dtos;
 using Order.Application.Interfaces;
 using Order.Domain.Entities;
+using System.Runtime.InteropServices;
 
 namespace Order.Application.Usecases;
 
@@ -29,7 +30,7 @@ public class OrderService : IOrderService
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         List<OrderItemEventDto> eventItems = orderItems.Select(item => new OrderItemEventDto(item.ProductId, item.Quantity)).ToList();
-        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(order.OrderGuid, eventItems, DateTime.UtcNow);
+        OrderCreatedEvent orderCreatedEvent = new OrderCreatedEvent(order.OrderGuid, order.Id, eventItems, DateTime.UtcNow);
         await _publishEndpoint.PublishOrderCreatedAsync(orderCreatedEvent, cancellationToken);
 
         return order.OrderGuid;
@@ -61,5 +62,14 @@ public class OrderService : IOrderService
     public Task UpdateOrderDetails(CreateOrderRequest order, int id, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
+    }
+    public async Task UpdateOrderStatus(StockDeductedEvent request, int id, CancellationToken cancellationToken = default)
+    {
+        OrderDomain? order = await _orderRepo.GetSingleAsync(id, cancellationToken);
+        if (order is null)
+            throw new KeyNotFoundException("Order not found.");
+
+        order.MarkAsProcessing();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

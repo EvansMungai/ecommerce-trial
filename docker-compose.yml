@@ -38,6 +38,7 @@ services:
     build:
       context: .
       dockerfile: Catalog.Worker/Dockerfile
+    container_name: CatalogWorker
     depends_on:
       rabbitmq: 
         condition: service_healthy
@@ -82,6 +83,23 @@ services:
     volumes:
       - order_postgres_data:/var/lib/postgresql/data
     restart: always
+
+  OrderWorker:
+    build:
+      context: .
+      dockerfile: Order.Worker/Dockerfile
+    container_name: OrderWorker
+    depends_on:
+      rabbitmq: 
+        condition: service_healthy
+      CatalogDb:
+        condition: service_started
+    environment:
+      - ConnectionStrings__Order=Host=OrderDb;Port=5432;Database=order;Username=postgres;Password=postgres
+      - QueueSettings__Host=rabbitmq
+      - QueueSettings__Username=myuser
+      - QueueSettings__Password=mypassword
+    restart: on-failure
 
   rabbitmq:
     image: rabbitmq:3-management

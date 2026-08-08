@@ -11,6 +11,7 @@
     <Project Path="Order.Application/Order.Application.csproj" />
     <Project Path="Order.Domain/Order.Domain.csproj" />
     <Project Path="Order.Infrastructure/Order.Infrastructure.csproj" />
+    <Project Path="Order.Worker/Order.Worker.csproj" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
