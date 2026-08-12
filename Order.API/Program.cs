@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Order.API;
 using Order.API.Endpoints;
+using Order.API.Extensions;
 using Order.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.RegisterApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
