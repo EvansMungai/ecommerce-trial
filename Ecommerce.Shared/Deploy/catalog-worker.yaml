@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: catalog-worker
-        image: # pull image from registry
+        image: our-dockerhub-username/order-worker:latest # Replace with your actual registry path
         envFrom:
         - configMapRef:
             name: ecommerce-config

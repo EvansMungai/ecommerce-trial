@@ -1,4 +1,4 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: order-api-worker
@@ -17,10 +17,9 @@ spec:
     spec:
       containers:
       - name: order-worker
-        image: # pull image from container registry
+        image: your-dockerhub-username/order-worker:latest # Replace with your actual registry path
         envFrom:
         - configMapRef:
             name: ecommerce-config
         - secretRef:
             name: ecommerce-secrets
-            
