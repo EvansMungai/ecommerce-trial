@@ -54,6 +54,15 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
 3. **Kubernetes Deployment Infrastructure**
    - Manifests are structured for each microservice. Each microservice independently manages its core Web API application alongside its respective background service.
    - Leverages the Kubernetes Gateway API via an Envoy-backed Gateway controller, separating edge ingress configurations from localized service-specific route rules.
+
+### CI Pipeline
+
+1. **Pipeline Scanning and Discovery**
+   - The pipeline continuously monitors the source code repository and runs when code is pushed to the main branch.
+2. **Multi-Stage Container Construction**
+   - The pipeline utilizes the optimized, localized Dockerfile embedded directly within each microservice directory.
+3. **Artifact Registry Publishing**
+   - The pipeline creates docker images based on the dockerfiles and safely publishes directly to an external container registry ensuring they are immediately available for deployment.
   
 ## ⚠️ Tradeoffs
 - EF Core constructor binding limitations require parameterless constructors
