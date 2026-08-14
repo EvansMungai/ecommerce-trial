@@ -1,0 +1,26 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-api-worker
+  namespace: ecommerce-service
+  labels:
+    app: catalog-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalog-worker
+  template:
+    metadata:
+      labels:
+        app: catalog-worker
+    spec:
+      containers:
+      - name: catalog-worker
+        image: evansmungai/catalog-worker:latest
+        envFrom:
+        - configMapRef:
+            name: ecommerce-config
+        - secretRef:
+            name: ecommerce-secrets
+            

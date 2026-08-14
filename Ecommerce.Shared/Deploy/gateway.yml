@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: ecommerce-gateway
+  namespace: ecommerce-service
+spec:
+  gatewayClassName: eg
+  listeners:
+  - name: http
+    protocol: http
+    port: 80
+    allowedRoutes:
+      namespace:
+        from: same
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: catalog-api-route
+  namespace: ecommerce-service
+spec: 
+  parentRefs:
+  - name: ecommerce-gateway
+  rules: 
+  - matches:
+    - path: 
+        type: PathPrefix
+        value: /api/catalog
+    backendRefs:
+    - name: catalog-api-svc
+      port: 5000
