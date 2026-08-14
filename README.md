@@ -51,6 +51,9 @@ A modular, event-driven order processing system built with ASP.NET Core 10, EF C
    - Decoupled Schemas: each database run container instances with their own dedicated, persistent named volumes, preventing cross-domain database mapping.
 2. **Container Lifecycle & Policies**
    - Use of self-healing state hooks to ensure service availability.
+3. **Kubernetes Deployment Infrastructure**
+   - Manifests are structured for each microservice. Each microservice independently manages its core Web API application alongside its respective background service.
+   - Leverages the Kubernetes Gateway API via an Envoy-backed Gateway controller, separating edge ingress configurations from localized service-specific route rules.
   
 ## ⚠️ Tradeoffs
 - EF Core constructor binding limitations require parameterless constructors
