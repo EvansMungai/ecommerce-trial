@@ -1,23 +1,23 @@
 ﻿apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: catalog-api-worker
+  name: order-api-worker
   namespace: ecommerce-service
   labels:
-    app: catalog-worker
+    app: order-worker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: catalog-worker
+      app: order-worker
   template:
     metadata:
       labels:
-        app: catalog-worker
+        app: order-worker
     spec:
       containers:
-      - name: catalog-worker
-        image: # pull image from registry
+      - name: order-worker
+        image: # pull image from container registry
         envFrom:
         - configMapRef:
             name: ecommerce-config

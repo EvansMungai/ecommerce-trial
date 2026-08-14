@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Include="Deploy\order-worker.yaml" />
+  </ItemGroup>
+
 </Project>

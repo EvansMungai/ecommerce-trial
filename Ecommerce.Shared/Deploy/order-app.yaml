@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-api-app
+  namespace: ecommerce-service
+  labels:
+    app: order-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-api
+  template:
+    metadata:
+      labels:
+        app: order-api
+    spec:
+      containers:
+      - name: order-api
+        image: 
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8081
+          name: https
+        envFrom:
+        - configMapRef:
+            name: ecommerce-config
+        - secretRef:
+            name: ecommerce-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-api-svc
+  namespace: ecommerce-service
+spec:
+  type: ClusterIP
+  ports: 
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: order-api
